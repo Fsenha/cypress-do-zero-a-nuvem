@@ -1,10 +1,3 @@
-describe('template spec', () => {
-  it('deve carregar a página inicial com sucesso', () => {
-    cy.visit('https://example.cypress.io')
-    cy.contains('type').should('exist')
-  })
-})
-
 describe('Central de Atendimento ao Cliente TAT', () => {
 
   beforeEach(() => {
@@ -16,7 +9,8 @@ describe('Central de Atendimento ao Cliente TAT', () => {
   })
 
   it('Testa os campos obrigatórios do formulário', () => {
-    cy.get('#firstName').type('João')
+    cy.get('#firstName')
+    .type('João')
     cy.get('#lastName').type('Silva')
     cy.get('#email').type('joao.silva@example.com')
     cy.get('#product').select('YouTube')
