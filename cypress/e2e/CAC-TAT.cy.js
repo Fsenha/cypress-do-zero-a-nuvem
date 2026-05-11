@@ -18,9 +18,7 @@ const longText = Cypress._.repeat('Lorem ipsum dolor sit amet, consectetur adipi
     cy.get('#open-text-area').type(longText, { delay: 0 })
     cy.contains('button', 'Enviar').click()
     cy.get('.success').should('be.visible')
-  })
-    //cy.get('#file-upload').selectFile('cypress/fixtures/cachorro.jpg')
-  
+  })  
     
   it('Exibe mensagem de erro ao submeter o formulário com um email com formatação inválida', () => {
     cy.visit('./src/index.html')
@@ -149,6 +147,50 @@ it('marca ambos checkboxes, depois desmarca o último', () => {
   cy.get('input[type=checkbox]')
     .first()
     .should('be.checked')
+})
+
+it('seleciona um arquivo da pasta fixtures', () => {
+	cy.get('#file-upload')
+		.selectFile('cypress/fixtures/cachorro.jpg')
+		.should(input => {
+			expect(input[0].files[0].name).to.be.equal('cachorro.jpg')
+		})
+})
+
+it('seleciona um arquivo simulando um drag-and-drop', () => {
+	cy.get('#file-upload')
+		.selectFile('cypress/fixtures/cachorro.jpg', { action: 'drag-drop' })
+		.should(input => {
+			expect(input[0].files[0].name).to.be.equal('cachorro.jpg')
+		})
+})
+
+it('seleciona um arquivo utilizando uma fixture para a qual foi dada um alias', () => {
+	cy.fixture('cachorro.jpg').as('image')
+	cy.get('#file-upload')
+		.selectFile('cypress/fixtures/cachorro.jpg')
+		.should(input => {
+			expect(input[0].files[0].name).to.be.equal('cachorro.jpg')
+		})
+})
+
+it('verifica que a política de privacidade abre em outra aba sem a necessidade de um clique (modo1)', () => {
+	cy.get('#privacy a')
+     .should('have.attr', 'href', 'privacy.html')
+      .and('have.attr', 'target', '_blank')
+
+})
+it('verifica que a política de privacidade abre em outra aba sem a necessidade de um clique (modo2)', () => {
+	cy.contains('a', 'Política de Privacidade')
+    .should('have.attr', 'href', 'privacy.html')
+    .and('have.attr', 'target', '_blank')
+})
+
+it('acessa a página da política de privacidade removendo o target e então clicando no link', () => {
+  cy.get('#privacy a')
+    .invoke('removeAttr', 'target')
+    .click()
+  cy.contains('h1', 'CAC TAT - Política de Privacidade').should('be.visible')
 })
 
 })
