@@ -34,4 +34,4 @@ Se você quer suportar esse projeto, deixe uma ⭐.
 
 ___
 
-Esse projeto foi criado com 💚 pelo [Walmyr](https://walmyr.dev).
+Esse projeto foi criado por [Fsenha](https://github.com/Fsenha)
