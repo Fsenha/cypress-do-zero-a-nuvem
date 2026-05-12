@@ -8,7 +8,9 @@ const longText = Cypress._.repeat('Lorem ipsum dolor sit amet, consectetur adipi
     cy.title().should('eq', 'Central de Atendimento ao Cliente TAT')
   })
 
+  //teste da função cy.clock() para controlar o tempo
   it('Testa os campos obrigatórios e envia o formulário', () => {
+    cy.clock()
     cy.get('#firstName').type('João')
     cy.get('#lastName').type('Silva')
     cy.get('#email').type('joao.silva@example.com')
@@ -18,18 +20,24 @@ const longText = Cypress._.repeat('Lorem ipsum dolor sit amet, consectetur adipi
     cy.get('#open-text-area').type(longText, { delay: 0 })
     cy.contains('button', 'Enviar').click()
     cy.get('.success').should('be.visible')
+    cy.tick(3000)
+    cy.get('.success').should('not.be.visible')
   })  
     
-  it('Exibe mensagem de erro ao submeter o formulário com um email com formatação inválida', () => {
-    cy.visit('./src/index.html')
-    cy.get('#firstName').type('João')
-    cy.get('#lastName').type('Silva')
-    cy.get('#email').type('joao.silva@@')
-    cy.get('#product').select('YouTube')
-    cy.get('input[value=email]').check()
-    cy.get('#open-text-area').type('Teste de email inválido')
-    cy.contains('button', 'Enviar').click()
-    cy.get('.error').should('be.visible')
+
+  //teste da função lodash.times() para repetir o mesmo teste várias vezes
+  Cypress._.times(5, () => {
+    it('Exibe mensagem de erro ao submeter o formulário com um email com formatação inválida', () => {
+      cy.visit('./src/index.html')
+      cy.get('#firstName').type('João')
+      cy.get('#lastName').type('Silva')
+      cy.get('#email').type('joao.silva@@')
+      cy.get('#product').select('YouTube')
+      cy.get('input[value=email]').check()
+      cy.get('#open-text-area').type('Teste de email inválido')
+      cy.contains('button', 'Enviar').click()
+      cy.get('.error').should('be.visible')
+    })
   })
 
   it('Campo telefone continua vazio quando preenchido com letras', () => {
@@ -191,6 +199,47 @@ it('acessa a página da política de privacidade removendo o target e então cli
     .invoke('removeAttr', 'target')
     .click()
   cy.contains('h1', 'CAC TAT - Política de Privacidade').should('be.visible')
+})
+it('exibe e oculta as mensagens de sucesso e erro usando .invoke()', () => {
+  cy.get('.success')
+    .should('not.be.visible')
+    .invoke('show')
+    .should('be.visible')
+    .and('contain', 'Mensagem enviada com sucesso.')
+    .invoke('hide')
+    .should('not.be.visible')
+  cy.get('.error')
+    .should('not.be.visible')
+    .invoke('show')
+    .should('be.visible')
+    .and('contain', 'Valide os campos obrigatórios!')
+    .invoke('hide')
+    .should('not.be.visible')
+})
+
+it("preenche o campo da área de texto usando o comando invoke", () => {
+	cy.get('#open-text-area')
+    .invoke('val', 'um texto qualquer')
+    .should('have.value', 'um texto qualquer')
+})
+
+it.only('faz uma requisição HTTP', () => {
+  cy.request('https://cac-tat-v3.s3.eu-central-1.amazonaws.com/index.html')
+  .should((response) => {
+    expect(response.status).to.eq(200)
+  })
+})
+
+it.only("faz uma requisição HTTP e verifica a resposta", () => {
+	cy.request({
+		method: 'GET',
+		url: 'https://cac-tat-v3.s3.eu-central-1.amazonaws.com/index.html'
+	})
+	.then((response) => {
+		expect(response.status).to.be.eq(200)
+    console.log(response.body)
+		expect(response.body).to.include('CAC TAT')
+	})
 })
 
 })
