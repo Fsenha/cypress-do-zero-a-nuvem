@@ -223,14 +223,20 @@ it("preenche o campo da área de texto usando o comando invoke", () => {
     .should('have.value', 'um texto qualquer')
 })
 
-it.only('faz uma requisição HTTP', () => {
+it('faz uma requisição HTTP', () => {
   cy.request('https://cac-tat-v3.s3.eu-central-1.amazonaws.com/index.html')
-  .should((response) => {
-    expect(response.status).to.eq(200)
+  .as('getRequest')
+  .its('status')
+  .should('eq', 200)
+  cy.get('@getRequest')
+    .its('body')
+    .should('include', 'CAC TAT')
+  cy.get('@getRequest')
+    .its('isOkStatusCode')
+    .should('be.true')
   })
-})
 
-it.only("faz uma requisição HTTP e verifica a resposta", () => {
+it("faz uma requisição HTTP e verifica a resposta de outra forma", () => {
 	cy.request({
 		method: 'GET',
 		url: 'https://cac-tat-v3.s3.eu-central-1.amazonaws.com/index.html'
@@ -240,6 +246,20 @@ it.only("faz uma requisição HTTP e verifica a resposta", () => {
     console.log(response.body)
 		expect(response.body).to.include('CAC TAT')
 	})
+})
+
+it('vendo o objeto de resposta JSON', () => {
+  cy.request('https://jsonplaceholder.typicode.com/users')
+  .then((response) => {
+    cy.log(response)
+  })
+}) 
+
+it.only('Encontrando o gato', () => {
+	cy.contains('🐈')
+  cy.get('#cat')
+    .invoke('show')
+    .should('be.visible')
 })
 
 })
