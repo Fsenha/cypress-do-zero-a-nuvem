@@ -27,11 +27,6 @@ Ou, rode `npm run cy:open` para abrir o App do Cypress no viewport desktop.
 Rode `npm run test:mobile` para rodar o teste no modo headless no viewport mobile
 
 Ou, rode `npm run cy:open:mobile` para abrir o Cypress App no viewport mobile.
-
-## Suporte esse projeto
-
-Se você quer suportar esse projeto, deixe uma ⭐.
-
 ___
 
 Esse projeto foi criado por [Fsenha](https://github.com/Fsenha)
